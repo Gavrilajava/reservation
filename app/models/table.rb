@@ -6,7 +6,7 @@ class Table < ActiveRecord::Base
   has_many :bookings
 
   scope :occupied, -> (time){ includes(:bookings).where(bookings: { time: time }) }
-  scope :free, ->(time){ where.not(id: occupied(time).pluck(:id)) }
-  
+  scope :free, ->(time){ where.not(id: occupied(time).pluck(:id)).order(:capacity) }
+
   
 end
