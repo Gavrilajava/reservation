@@ -49,27 +49,33 @@ class Booking < ActiveRecord::Base
   end
 
   # method to book the table/tables for the group of people
-  # it return an array of integers in case of success and hash with key :error in case of failure
+  # it return an hash with key :error in case of failure
+  # and key notice 
   def self.book(params)
-    tables = Booking.get_best_tables_combination(Table.free(params[:time]).pluck(:capacity), params[:persons])
+    tables = Booking.get_best_tables_combination(Table.free(params[:time]).pluck(:capacity), params[:persons].to_i)
     if tables
       begin
-        persons = params[:persons]
+        persons = params[:persons].to_i
         tables.each{ |c|
           table = Table.free(params[:time]).find{ |t|  t.capacity == c}
-          Booking.create(
+          booking = Booking.create(
             table_id: table.id, 
             name: params[:name], 
             persons: [persons, table.capacity].min, 
             time: params[:time]
           )
-          persons -= table.capacity
+          if booking.valid?
+            persons -= table.capacity
+          else
+            raise StandardError(booking.errors)
+          end
         }
+        { notice: "#{'Table'.pluralize(tables.count)} succesfully booked." }
       rescue StandardError => e
-        {error: e}
+        { error: e }
       end
     else
-      {error: "No tables available at this time"}
+      { error: "No tables available at this time" } 
     end
   end
 end
