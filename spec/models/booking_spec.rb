@@ -27,9 +27,14 @@ RSpec.describe Booking, type: :model do
       expect(Booking.new(@valid_params.except(:time))).to_not be_valid
     end
     it "it is not possible to book a table twice" do
-      res1 = Item.create(@valid_params)
-      res2 = Item.new(@valid_params)
+      res1 = Booking.create(@valid_params)
+      res2 = Booking.new(@valid_params)
       expect(res2).to_not be_valid
+    end
+    it "should start from the begining of an hour" do
+      non_valid_params = @valid_params.except(:time)
+      non_valid_params[:time] = DateTime.parse("2020-09-05 10:15:00")
+      expect(Booking.new(non_valid_params)).to_not be_valid
     end
   end
   describe '.book' do
@@ -40,6 +45,7 @@ RSpec.describe Booking, type: :model do
       expect(Booking.last.name).to match(@valid_params[:name])
     end
     it "returns nil when tables are not available" do
+      Table.destroy_all
       expect(Booking.book(@valid_params.except(:table))).to match(nil)
     end
     it "books optimal number of tables" do
@@ -51,8 +57,18 @@ RSpec.describe Booking, type: :model do
       Table.create(number: 4, capacity: 2)
       @valid_params[:persons] = 6
       Booking.book(@valid_params.except(:table))
-      expect(Reservation.count).to match(2)
+      expect(Booking.count).to match(2)
     end
+    # it "be able to host an introvert party" do
+    #   n = 0
+    #   100.times do
+    #     n+= 1
+    #     Table.create(number: n, capacity: 1)
+    #   end
+    #   @valid_params[:persons] = 99
+    #   Booking.book(@valid_params.except(:table))
+    #   expect(Reservation.count).to match(99)
+    # end
   end
   after(:each) do
     Table.destroy_all

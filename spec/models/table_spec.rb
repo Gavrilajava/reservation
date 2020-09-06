@@ -17,13 +17,13 @@ RSpec.describe Table, type: :model do
       expect(table2).to_not be_valid
     end
   end
-  describe '.get_free' do
+  describe '.free' do
     it "return free tables for the time" do
       Table.create(number: 1, capacity: 4)
       Table.create(number: 2, capacity: 4)
       time = DateTime.parse("2020-09-05 10:00:00")
       Booking.create(table: Table.create(number: 3, capacity: 4), name: "John Doe", persons: 4, time: time)
-      expect(Table.get_free(time).count).to match(2)
+      expect(Table.free(time).count).to match(2)
     end
   end
   after(:each) do
