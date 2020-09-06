@@ -1,4 +1,15 @@
 Rails.application.routes.draw do
+
+  get '/bookings', to: 'bookings#index'
+  post '/bookings', to: 'bookings#create'
+  delete '/bookings/:id', to: 'bookings#destroy'
+
+  get '/tables', to: 'tables#index'
+  post '/tables', to: 'tables#create'
+  delete '/tables/:id', to: 'tables#destroy'
+
+  root 'bookings#index'
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
