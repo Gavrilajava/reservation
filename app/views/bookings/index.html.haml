@@ -6,7 +6,7 @@
     =label_tag 'persons', 'Number of guests:'
     =f.number_field :persons
     =label_tag 'time', 'Date and time of reservation:'
-    =f.datetime_local_field :time
+    =f.datetime_local_field :time, value: (Time.now + 1.hours).beginning_of_hour.strftime('%Y-%m-%dT%H:%M')
     =f.submit class: "button"
 %h2 All booked tables:
 %table

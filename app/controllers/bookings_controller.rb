@@ -2,7 +2,7 @@ class BookingsController < ApplicationController
 
   def index
     @booking = Booking.new
-    @bookings = Booking.all.includes(:table)
+    @bookings = Booking.ordered
   end
 
   def create

@@ -1,7 +1,7 @@
 class TablesController < ApplicationController
   def index
     @table = Table.new
-    @tables = Table.all
+    @tables = Table.ordered
   end
 
   def create

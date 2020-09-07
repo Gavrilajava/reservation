@@ -2,9 +2,15 @@ class Booking < ActiveRecord::Base
 
   validates :table, :name, :persons, :time, presence: true
   validates :time, uniqueness: {scope: :table}
+  validates :time, inclusion: {
+                                in: (Time.now..Date.today+1.years), 
+                                message: "should not be in the past or more than a year from now"
+                              }
   validate :should_start_from_beginning_of_an_hour
 
   belongs_to :table
+
+  scope :ordered, -> { includes(:table).order(:time) }
 
   def should_start_from_beginning_of_an_hour
     if time && time.min != 0
@@ -66,12 +72,16 @@ class Booking < ActiveRecord::Base
         if booking.valid?
           persons -= table.capacity
         else
-          raise booking.errors
+          raise booking.error_messages
         end
       }
       { notice: "#{'Table'.pluralize(tables.count)} succesfully booked." }
     rescue StandardError => e
       { error: e.message }
     end
+  end
+
+  def error_messages
+    self.errors.messages.map{ |key, value| "Booking #{key} #{value.join(', ')}" }.join(', ')
   end
 end
