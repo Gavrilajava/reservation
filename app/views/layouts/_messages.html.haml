@@ -1,0 +1,7 @@
+-#  Rails flash messages styled for Zurb Foundation
+-if flash.any?
+  = flash.each do |key, value|
+    .alert{ :class => "alert-#{key}" }
+      %button.close{ :data => { :dismiss => "alert" } } x
+      %strong
+        = value

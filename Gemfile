@@ -46,4 +46,8 @@ group :development do
 end
 
 gem 'haml'
+gem 'foundation-rails', '~> 5.5'
+group :development do
+  gem 'rails_layout'
+end
 
