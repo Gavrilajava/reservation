@@ -20,7 +20,7 @@ RSpec.describe TablesController, type: :controller do
       end
 
       it 'sets notice' do
-        expect(flash[:notice]).to eq('Table succesfully created.')
+        expect(flash[:info]).to eq('Table succesfully created.')
       end
       it 'redirects to index page' do
         expect(response).to redirect_to tables_path
@@ -36,7 +36,7 @@ RSpec.describe TablesController, type: :controller do
       end
 
       it 'sets errors' do
-        expect(flash[:errors]).to_not eq nil
+        expect(flash[:alert]).to_not eq nil
       end
       it 'redirects to index page' do
         expect(response).to redirect_to tables_path

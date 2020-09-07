@@ -1,7 +1,6 @@
 -#  Rails flash messages styled for Zurb Foundation
--if flash.any?
-  = flash.each do |key, value|
-    .alert{ :class => "alert-#{key}" }
-      %button.close{ :data => { :dismiss => "alert" } } x
-      %strong
-        = value
+- flash.each do |key, value|
+  %div{ class: "alert-box #{key} round", data: {closable: true}}
+    %strong
+      = value
+    %a{href:"#", class: "close", data: {close: true }} &times

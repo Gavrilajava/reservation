@@ -1,1 +1,18 @@
-tables
+=form_for @table, url: tables_path do |f|
+  %fieldset.fieldset
+    %legend Create new table
+    =label_tag 'number', 'Table number:'
+    =f.number_field :number
+    =label_tag 'capacity', 'Table capacity:'
+    =f.number_field :capacity
+    =f.submit class: "button"
+%table
+  %thead
+    %tr
+      %th Number
+      %th Capacity
+  %tbody
+    -@tables.each do |t|
+      %tr
+        %td #{t.number}
+        %td #{t.capacity}

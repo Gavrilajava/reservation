@@ -26,7 +26,7 @@ RSpec.describe BookingsController, type: :controller do
       end
 
       it 'sets notice' do
-        expect(flash[:notice]).to eq('Table succesfully booked.')
+        expect(flash[:info]).to eq('Table succesfully booked.')
       end
       it 'redirects to index page' do
         expect(response).to redirect_to bookings_path
@@ -47,7 +47,7 @@ RSpec.describe BookingsController, type: :controller do
       end
 
       it 'sets errors' do
-        expect(flash[:errors]).to_not eq nil
+        expect(flash[:alert]).to_not eq nil
       end
       it 'redirects to index page' do
         expect(response).to redirect_to bookings_path

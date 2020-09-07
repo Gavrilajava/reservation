@@ -1,15 +1,16 @@
 class BookingsController < ApplicationController
 
   def index
-    @bookings = Booking.all
+    @booking = Booking.new
+    @bookings = Booking.all.includes(:table)
   end
 
   def create
     bookings = Booking.book(valid_params)
     if bookings[:notice]
-      flash[:notice] = bookings[:notice]
+      flash[:info] = bookings[:notice]
     else
-      flash[:errors] = bookings[:error]
+      flash[:alert] = bookings[:error]
     end
     redirect_to bookings_path
   end

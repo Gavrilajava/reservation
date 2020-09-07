@@ -8,5 +8,8 @@ class Table < ActiveRecord::Base
   scope :occupied, -> (time){ includes(:bookings).where(bookings: { time: time }) }
   scope :free, ->(time){ where.not(id: occupied(time).pluck(:id)).order(:capacity) }
 
+  def error_messages
+    self.errors.messages.map{ |key, value| "Table #{key} #{value.join(',')}" }.join(',')
+  end
   
 end

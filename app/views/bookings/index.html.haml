@@ -1,1 +1,22 @@
-bookings
+=form_for @booking, url: bookings_path do |f|
+  %fieldset.fieldset
+    %legend Book the tables
+    =label_tag 'name', 'Name of the guest:'
+    =f.text_field :name
+    =label_tag 'persons', 'Number of guests:'
+    =f.number_field :persons
+    =label_tag 'time', 'Date and time of reservation:'
+    =f.datetime_field :time
+    =f.submit class: "button"
+%table
+  %thead
+    %tr
+      %th Date
+      %th Person
+      %th Table
+  %tbody
+    -@bookings.each do |t|
+      %tr
+        %td #{t.time}
+        %td #{t.name}
+        %td #{t.table.number}

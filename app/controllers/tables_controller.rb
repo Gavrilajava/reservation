@@ -1,14 +1,15 @@
 class TablesController < ApplicationController
   def index
+    @table = Table.new
     @tables = Table.all
   end
 
   def create
     table = Table.new(valid_params)
     if table.save
-      flash[:notice] = 'Table succesfully created.'
+      flash[:info] = 'Table succesfully created.'
     else
-      flash[:errors] = table.errors
+      flash[:alert] = table.error_messages
     end
     redirect_to tables_path
   end
