@@ -14,15 +14,15 @@ class Booking < ActiveRecord::Base
 
   # function to get all possible tables combination for group
   # tables are sorted by capacity, so if tables capacity without a smallest(first)
-  # less than pesrons, it can be added. 
+  # less than pesrons, it can be added.
   # Finally, the change problem has come in useful in life.
   def self.get_all_tables_combinations(tables, persons)
     if tables.last(tables.length - 1).sum < persons
       result = [tables]
-    else 
+    else
       result = []
     end
-    tables.each_with_index{ |table, index| 
+    tables.each_with_index{ |table, index|
       less_tables = tables.first(index) + tables.last(tables.length - 1 - index)
       if less_tables.sum >= persons
         result = (result + Booking.get_all_tables_combinations(less_tables, persons)).uniq
@@ -35,7 +35,7 @@ class Booking < ActiveRecord::Base
   # it is also checks total capacity and if there is a single table that fits the group
   def self.get_best_tables_combination(tables, persons)
     if tables.sum < persons
-      nil
+      raise "No tables available at this time"
     else
       if tables.find{|t| t == persons}
         [persons]
@@ -50,32 +50,28 @@ class Booking < ActiveRecord::Base
 
   # method to book the table/tables for the group of people
   # it return an hash with key :error in case of failure
-  # and key notice 
+  # and key notice
   def self.book(params)
-    tables = Booking.get_best_tables_combination(Table.free(params[:time]).pluck(:capacity), params[:persons].to_i)
-    if tables
-      begin
-        persons = params[:persons].to_i
-        tables.each{ |c|
-          table = Table.free(params[:time]).find{ |t|  t.capacity == c}
-          booking = Booking.create(
-            table_id: table.id, 
-            name: params[:name], 
-            persons: [persons, table.capacity].min, 
-            time: params[:time]
-          )
-          if booking.valid?
-            persons -= table.capacity
-          else
-            raise StandardError(booking.errors)
-          end
-        }
-        { notice: "#{'Table'.pluralize(tables.count)} succesfully booked." }
-      rescue StandardError => e
-        { error: e }
-      end
-    else
-      { error: "No tables available at this time" } 
+    begin
+      tables = Booking.get_best_tables_combination(Table.capacity(params[:time]), params[:persons].to_i)
+      persons = params[:persons].to_i
+      tables.each{ |c|
+        table = Table.pick(params[:time], c)
+        booking = Booking.create(
+          table_id: table.id,
+          name: params[:name],
+          persons: [persons, table.capacity].min,
+          time: params[:time]
+        )
+        if booking.valid?
+          persons -= table.capacity
+        else
+          raise booking.errors
+        end
+      }
+      { notice: "#{'Table'.pluralize(tables.count)} succesfully booked." }
+    rescue StandardError => e
+      { error: e.message }
     end
   end
 end

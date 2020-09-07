@@ -1,28 +1,29 @@
 == README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is the source code of application that I create for Digital Factory. I hope I got the first requirement right about the rail and ruby version, because I'm more tormented with installing the old rails and Foundation than doing the application. The Foundation, by the way, was quite a nice framework, I don't regret taking it instead of Bootstrap. In general, it was unexpectedly nice to write this application. I haven't done anything on pure rails for a long time, mainly using them as an API. Ruby is still a very nice language. Thank you to my mother and the film academy. It's a pity no one reads Readme.
 
-Things you may want to cover:
 
 * Ruby version
 
+  it was tested on 2.3, however it works on 2.6 too, you just need to install bundler lower than 2.0
+
 * System dependencies
 
-* Configuration
+  Ruby, rails, sqlite, all stuff that mentioned at Gemfile.loc, something with the screen
 
-* Database creation
+* Database creation & initialization
 
-* Database initialization
+  rake db:migrate
+
+* Database 
+
+  proudly use sqlite
 
 * How to run the test suite
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+  rspec
 
 
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+
+
+

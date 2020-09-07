@@ -6,17 +6,24 @@
     =label_tag 'persons', 'Number of guests:'
     =f.number_field :persons
     =label_tag 'time', 'Date and time of reservation:'
-    =f.datetime_field :time
+    =f.datetime_local_field :time
     =f.submit class: "button"
+%h2 All booked tables:
 %table
   %thead
     %tr
       %th Date
+      %th Time
       %th Person
-      %th Table
+      %th Table #
+      %th Capacity
+      %th Guests
   %tbody
     -@bookings.each do |t|
       %tr
-        %td #{t.time}
+        %td #{t.time.to_date}
+        %td #{t.time.strftime("%I:%M %P")}
         %td #{t.name}
         %td #{t.table.number}
+        %td #{t.table.capacity}
+        %td #{t.persons}
