@@ -13,6 +13,9 @@
 
 ActiveRecord::Schema.define(version: 20200907221345) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "bookings", force: :cascade do |t|
     t.integer  "table_id"
     t.datetime "time"
@@ -22,7 +25,7 @@ ActiveRecord::Schema.define(version: 20200907221345) do
     t.datetime "updated_at", null: false
   end
 
-  add_index "bookings", ["table_id"], name: "index_bookings_on_table_id"
+  add_index "bookings", ["table_id"], name: "index_bookings_on_table_id", using: :btree
 
   create_table "tables", force: :cascade do |t|
     t.integer  "number"
