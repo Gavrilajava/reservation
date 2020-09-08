@@ -44,7 +44,7 @@ RSpec.describe Booking, type: :model do
       Booking.book(@valid_params.except(:table))
       expect(Booking.last.name).to match(@valid_params[:name])
     end
-    it "returns nil when tables are not available" do
+    it "returns error when tables are not available" do
       Table.destroy_all
       expect(Booking.book(@valid_params.except(:table))).to have_key(:error)
     end
