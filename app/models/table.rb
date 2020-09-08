@@ -1,7 +1,7 @@
 class Table < ActiveRecord::Base
 
   validates :number, presence: true, uniqueness: true
-  validates :capacity, presence: true
+  validates :capacity, presence: true, numericality: {greater_than: 0}
 
   has_many :bookings
 

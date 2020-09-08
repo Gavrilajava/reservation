@@ -33,9 +33,9 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # gem 'capistrano-rails', group: :development
 
 group :development, :test do
-  gem 'byebug', platform: :mri
+  gem 'byebug', '9.1.0'
   gem 'rspec-rails', '~> 3.5'
-  gem "capybara"
+  gem "capybara", '3.4.2'
 end
 
 group :development do
@@ -43,7 +43,7 @@ group :development do
   gem 'web-console', '~> 2.0'
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'spring'
+  gem 'spring', '2.0.2'
 
   gem 'rails_layout'
 end

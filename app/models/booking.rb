@@ -48,7 +48,7 @@ class Booking < ActiveRecord::Base
       else
         combinations = Booking.get_all_tables_combinations(tables, persons)
         min_seats = combinations.min_by{ |t| t.sum }.sum
-        combinations = combinations.filter{ |c| c.sum == min_seats}
+        combinations = combinations.select{ |c| c.sum == min_seats}
         combinations.min_by{ |t| t.length }
       end
     end
