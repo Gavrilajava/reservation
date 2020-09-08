@@ -12,8 +12,11 @@
     %tr
       %th Number
       %th Capacity
+      %th Destroy
   %tbody
     -@tables.each do |t|
       %tr
         %td #{t.number}
         %td #{t.capacity}
+        %td 
+          =button_to "Destroy", { action: "destroy", id: t.id}, method: :delete, class: "button secondary tiny", data: {confirm: "Are you sure?" }

@@ -18,12 +18,15 @@
       %th Table #
       %th Capacity
       %th Guests
+      %th Cancel
   %tbody
-    -@bookings.each do |t|
+    -@bookings.each do |b|
       %tr
-        %td #{t.time.to_date}
-        %td #{t.time.strftime("%I:%M %P")}
-        %td #{t.name}
-        %td #{t.table.number}
-        %td #{t.table.capacity}
-        %td #{t.persons}
+        %td #{b.time.to_date}
+        %td #{b.time.strftime("%I:%M %P")}
+        %td #{b.name}
+        %td #{b.table.number}
+        %td #{b.table.capacity}
+        %td #{b.persons}
+        %td 
+          =button_to "Cancel", { action: "destroy", id: b.id}, method: :delete, class: "button secondary tiny", data: {confirm: "Are you sure?" }

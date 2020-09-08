@@ -16,7 +16,7 @@ RSpec.describe BookingsController, type: :controller do
         booking = {
           name: "John Doe", 
           persons: 4, 
-          time: DateTime.parse("2020-09-05 10:00:00")
+          time: (Time.now + 7.days).beginning_of_hour
         }
         post :create, booking: booking
       end
@@ -26,7 +26,7 @@ RSpec.describe BookingsController, type: :controller do
       end
 
       it 'sets notice' do
-        expect(flash[:info]).to eq('Table succesfully booked.')
+        expect(flash[:info]).to eq('1 Table succesfully booked.')
       end
       it 'redirects to index page' do
         expect(response).to redirect_to bookings_path
@@ -37,7 +37,7 @@ RSpec.describe BookingsController, type: :controller do
         table = Table.create(number: 1, capacity: 4)
         booking = {
           persons: 4, 
-          time: DateTime.parse("2020-09-05 10:00:00")
+          time: (Time.now + 7.days).beginning_of_hour
         }
         post :create, booking: booking
       end
@@ -63,7 +63,7 @@ RSpec.describe BookingsController, type: :controller do
         table: table, 
         name: "John Doe", 
         persons: 4, 
-        time: DateTime.parse("2020-09-05 10:00:00")
+        time: (Time.now + 7.days).beginning_of_hour
       }
       booking = Booking.create(valid_params)
       delete :destroy, id: booking.id
@@ -81,6 +81,5 @@ RSpec.describe BookingsController, type: :controller do
 
   after(:each) do
     Table.destroy_all
-    Booking.destroy_all
   end
 end

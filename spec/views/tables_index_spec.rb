@@ -15,7 +15,7 @@ RSpec.describe 'tables/index', type: :feature do
 
   it 'renders tables form' do
     visit tables_path
-    form = find('form')
+    form = find('form.new_table')
     expect(form.find('input#table_number')[:name]).to eq('table[number]')
     expect(form.find('input#table_capacity')[:name]).to eq('table[capacity]')
   end

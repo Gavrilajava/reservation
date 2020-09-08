@@ -21,13 +21,12 @@ RSpec.describe Table, type: :model do
     it "return free tables for the time" do
       Table.create(number: 1, capacity: 4)
       Table.create(number: 2, capacity: 4)
-      time = DateTime.parse("2020-09-05 10:00:00")
+      time = (Time.now + 7.days).beginning_of_hour
       Booking.create(table: Table.create(number: 3, capacity: 4), name: "John Doe", persons: 4, time: time)
       expect(Table.free(time).count).to match(2)
     end
   end
   after(:each) do
     Table.destroy_all
-    Booking.destroy_all
   end
 end

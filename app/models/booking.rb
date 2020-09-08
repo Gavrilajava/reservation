@@ -12,6 +12,7 @@ class Booking < ActiveRecord::Base
 
   scope :ordered, -> { includes(:table).order(:time) }
 
+  #validation method to check the booking starts from the begining of an hour
   def should_start_from_beginning_of_an_hour
     if time && time.min != 0
       errors.add(:time, "should start from beginning of an hour")
@@ -23,7 +24,7 @@ class Booking < ActiveRecord::Base
   # less than pesrons, it can be added.
   # Finally, the change problem has come in useful in life.
   def self.get_all_tables_combinations(tables, persons)
-    if tables.last(tables.length - 1).sum < persons
+    if tables.first(tables.length - 1).sum < persons
       result = [tables]
     else
       result = []
@@ -37,14 +38,38 @@ class Booking < ActiveRecord::Base
     result
   end
 
+  # Very stupid but very fast method ti find table combination for company.
+  # It return tre array of integer values if it find the tables to fit the group,
+  # and an falsy value if not. 
+  def self.shortcut_to_find_tables_combination(tables, persons)
+    result = []
+    other_tables = tables.map{ |t| t }
+    while persons > 0 && other_tables.count do
+      if persons > other_tables.last
+        result << other_tables.last
+        persons -= other_tables.last
+        other_tables.pop()
+      else
+        if other_tables.any?{|t| t==persons}
+          result << persons
+          persons = 0
+        else
+          return nil
+        end
+      end
+    end
+    result
+  end
+
   # function to get best possible tables combination for group of people
   # it is also checks total capacity and if there is a single table that fits the group
   def self.get_best_tables_combination(tables, persons)
     if tables.sum < persons
       raise "No tables available at this time"
     else
-      if tables.find{|t| t == persons}
-        [persons]
+      shortcut = Booking.shortcut_to_find_tables_combination(tables, persons)
+      if shortcut
+        shortcut
       else
         combinations = Booking.get_all_tables_combinations(tables, persons)
         min_seats = combinations.min_by{ |t| t.sum }.sum
@@ -56,7 +81,7 @@ class Booking < ActiveRecord::Base
 
   # method to book the table/tables for the group of people
   # it return an hash with key :error in case of failure
-  # and key notice
+  # and key notice in case of success
   def self.book(params)
     begin
       tables = Booking.get_best_tables_combination(Table.capacity(params[:time]), params[:persons].to_i)
@@ -75,12 +100,13 @@ class Booking < ActiveRecord::Base
           raise booking.error_messages
         end
       }
-      { notice: "#{'Table'.pluralize(tables.count)} succesfully booked." }
+      { notice: "#{tables.count} #{'Table'.pluralize(tables.count)} succesfully booked." }
     rescue StandardError => e
       { error: e.message }
     end
   end
 
+  # method to stringify validation errors
   def error_messages
     self.errors.messages.map{ |key, value| "Booking #{key} #{value.join(', ')}" }.join(', ')
   end

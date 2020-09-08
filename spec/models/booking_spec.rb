@@ -7,7 +7,7 @@ RSpec.describe Booking, type: :model do
       table: @table, 
       name: "John Doe", 
       persons: 4, 
-      time: DateTime.parse("2020-09-05 10:00:00")
+      time: (Time.now + 7.days).beginning_of_hour
     }
   end
   describe 'create and validate' do
@@ -53,8 +53,8 @@ RSpec.describe Booking, type: :model do
       Table.create(number: 2, capacity: 3)
       Table.create(number: 3, capacity: 3)
       Table.create(number: 4, capacity: 2)
-      Table.create(number: 4, capacity: 2)
-      Table.create(number: 4, capacity: 2)
+      Table.create(number: 5, capacity: 2)
+      Table.create(number: 6, capacity: 2)
       @valid_params[:persons] = 6
       Booking.book(@valid_params.except(:table))
       expect(Booking.count).to match(2)
@@ -84,6 +84,5 @@ RSpec.describe Booking, type: :model do
   end
   after(:each) do
     Table.destroy_all
-    Booking.destroy_all
   end
 end
