@@ -1,6 +1,8 @@
 class Booking < ActiveRecord::Base
 
   validates :table, :name, :persons, :time, presence: true
+  validates :name, length: { minimum: 1 }
+  validates :persons, numericality: { only_integer: true, greater_than: 0 }
   validates :time, uniqueness: {scope: :table}
   validates :time, inclusion: {
                                 in: (Time.now..Date.today+1.years), 
@@ -84,6 +86,11 @@ class Booking < ActiveRecord::Base
   # and key notice in case of success
   def self.book(params)
     begin
+      if params[:name].length < 1
+        raise "Name can't be blank"
+      elsif params[:persons].to_i < 1
+        raise "Persons should be greater that 0"
+      end
       tables = Booking.get_best_tables_combination(Table.capacity(params[:time]), params[:persons].to_i)
       persons = params[:persons].to_i
       tables.each{ |c|
